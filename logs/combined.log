@@ -1,0 +1,4 @@
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 13:17:38"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 13:17:39"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 13:17:39"}
+{"level":"info","message":"Shutting down server... Signal: SIGINT","service":"ecommerce-api","timestamp":"2025-06-13 13:17:50"}
