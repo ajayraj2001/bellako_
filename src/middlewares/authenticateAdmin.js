@@ -1,6 +1,6 @@
 const { ApiError } = require('../errorHandler');
 const { Admin } = require('../models');
-const { verifyAccessToken } = require('../utils');
+const { verifyAccessToken } = require('../utils/verifyAccessToken');
 
 const authenticateAdmin = async (req, res, next) => {
   try {

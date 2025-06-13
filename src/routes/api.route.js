@@ -1,9 +1,12 @@
-const adminRoute = require('./admin.route');
+// ===== src/routes/api.route.js =====
+const express = require('express');
+// const adminRoute = require('./admin.route');
 const userRoute = require('./user.route');
+const { generalLimiter } = require('../middlewares/rateLimiter');
 
-const apiRoute = require('express').Router();
+const apiRoute = express.Router();
 
-apiRoute.use('/admin', adminRoute);
-apiRoute.use('/user', userRoute);
+// apiRoute.use('/admin', adminRoute);
+apiRoute.use('/user', generalLimiter, userRoute);
 
 module.exports = apiRoute;

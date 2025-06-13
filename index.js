@@ -1,7 +1,7 @@
 // ===== index.js =====
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { connectToDatabase } = require('./config');
+const { connectToDatabase } = require('./config/db');
 const app = require('./src/app');
 const scripts = require('./src/scripts');
 const logger = require('./src/config/logger');

@@ -1,10 +1,11 @@
-const express = require("express");
+// ===== src/routes/user.route.js =====
+const express = require('express');
+const authRoutes = require('./userRoutes/authRoute');
+const profileRoutes = require('./userRoutes/profileRoute');
+
 const userRoute = express.Router();
 
-// Import the separate route files
-const authRoutes = require("./userRoutes/authRoute");
-
-// Use the routes
-userRoute.use("/auth", authRoutes); // For authentication routes
+userRoute.use('/auth', authRoutes);
+userRoute.use('/profile', profileRoutes);
 
 module.exports = userRoute;

@@ -1,6 +1,6 @@
 const { ApiError } = require('../errorHandler');
 const { User } = require('../models');
-const { verifyAccessToken } = require('../utils');
+const { verifyAccessToken } = require('../utils/verifyAccessToken');
 
 const authenticateUser = async (req, res, next) => {
   try {

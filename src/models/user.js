@@ -1,109 +1,110 @@
-'use strict';
+// ===== src/models/User.js =====
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const { getCurrentIST } = require('../utils/timeUtils'); 
+const bcrypt = require('bcryptjs');
 
-const UserSchema = new Schema({
-  name: {
-    type: String,
-    trim: true,
-    default: '',
-  },
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    trim: true,
-    lowercase: true,
-    default: '',
-  },
-  number: {
-    type: String,
+    required: true,
     unique: true,
-    required: true
+    lowercase: true,
+    trim: true,
+    index: true
   },
-  is_profile_complete: {
+  fullName: {
+    type: String,
+    trim: true
+  },
+  phone: {
+    type: String,
+    trim: true,
+    sparse: true,
+    index: true
+  },
+  profileImg: {
+    type: String
+  },
+  isProfileComplete: {
     type: Boolean,
-    default: false,
+    default: false
   },
-  gender: {
-    type: String,
-    enum: ['Male', 'Female', 'Other', ''],
-    default: '',
-  },
-  busy: {
+  isEmailVerified: {
     type: Boolean,
-    default: false,
+    default: false
   },
-  call_type: {
+  authProvider: {
     type: String,
-    default: '',
+    enum: ['email', 'google', 'facebook'],
+    default: 'email'
   },
-  wallet: {
-    type: Number,
-    default: 0,
-  },
-  profile_img: {
+  googleId: {
     type: String,
-    default: '',
+    sparse: true,
+    index: true
   },
-  referral_code: {
+  facebookId: {
     type: String,
-    default: '',
-  },
-  refer_user_id: {
-    type: String,
-    default: '',
-  },
-  dob: {
-    type: String, // Store as String
-    default: '',  // Default to empty string
-  },
-  tob: {
-    type: String,
-    default: '',
-  },
-  pob: {
-    type: String,
-    default: '',
-  },
-  rashi: {
-    type: String,
-    default: '',
-  },
-  status: {
-    type: String,
-    enum: ['Active', 'Inactive'],
-    default: 'Active',
-  },
-  deviceToken: {
-    type: String,
-    default: '',
-  },
-  deviceId: {
-    type: String,
-    default: '',
+    sparse: true,
+    index: true
   },
   otp: {
     type: String,
-    required: false, // Ensure OTP is always provided
-    match: /^[0-9]{4}$/, // Validate it’s exactly 6 digits
-    default: "", // Default value
+    select: false
   },
   otpExpiresAt: {
-    type: Date, // Field to store OTP expiration time
+    type: Date,
+    select: false
   },
-
-  free_calls_used_today: { type: Number, default: 0 }, // Track free calls used today
-  last_free_call_reset: { type: Date, default: Date.now }, // Track when the free call count was last reset
-
+  refreshToken: {
+    type: String,
+    select: false
+  },
+  deviceTokens: [{
+    token: String,
+    deviceId: String,
+    platform: {
+      type: String,
+      enum: ['ios', 'android', 'web']
+    },
+    lastUsed: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  lastLogin: {
+    type: Date
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  }
 }, {
-  timestamps: { 
-    createdAt: 'created_at', 
-    updatedAt: 'updated_at', 
-    currentTime: getCurrentIST, // Use IST for timestamps
-  },
+  timestamps: true
 });
 
-// Indexes for faster queries
-UserSchema.index({ number: 1 }); // Index on `number` for fast lookups
+// Indexes for better performance
+userSchema.index({ email: 1, isActive: 1 });
+userSchema.index({ createdAt: -1 });
 
-module.exports = mongoose.model('User', UserSchema);
+// Virtual for profile completion percentage
+userSchema.virtual('profileCompletionPercentage').get(function () {
+  let completed = 0;
+  const fields = ['email', 'fullName', 'phone', 'profileImg'];
+  fields.forEach(field => {
+    if (this[field]) completed++;
+  });
+  return Math.round((completed / fields.length) * 100);
+});
+
+// Remove sensitive data when converting to JSON
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.otp;
+  delete obj.otpExpiresAt;
+  delete obj.refreshToken;
+  delete obj.__v;
+  return obj;
+};
+
+const User = mongoose.model('User', userSchema);
+module.exports = User;

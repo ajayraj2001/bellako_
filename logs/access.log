@@ -2,3 +2,22 @@
 {"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 13:17:39"}
 {"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 13:17:39"}
 {"level":"info","message":"Shutting down server... Signal: SIGINT","service":"ecommerce-api","timestamp":"2025-06-13 13:17:50"}
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 14:34:35"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 14:34:36"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 14:34:36"}
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 16:48:05"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 16:48:07"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 16:48:07"}
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 16:48:47"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 16:48:49"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 16:48:49"}
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 16:50:32"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 16:50:33"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 16:50:33"}
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 23:12:39"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 23:12:42"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 23:12:42"}
+{"level":"info","message":"Initializing server...","service":"ecommerce-api","timestamp":"2025-06-13 23:18:48"}
+{"level":"info","message":"Server is running on port 5001","service":"ecommerce-api","timestamp":"2025-06-13 23:18:50"}
+{"level":"info","message":"Environment: development","service":"ecommerce-api","timestamp":"2025-06-13 23:18:50"}
+{"level":"info","message":"Shutting down server... Signal: SIGINT","service":"ecommerce-api","timestamp":"2025-06-13 23:18:51"}

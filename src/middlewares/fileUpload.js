@@ -1,37 +1,100 @@
+// ===== src/middlewares/fileUpload.js =====
 const multer = require('multer');
+const path = require('path');
 const fs = require('fs');
-const {ApiError} = require('../errorHandler')
+const ApiError = require('../utils/apiError');
 
-function getFileUploader(fieldName, publicDirName = '', mimetypes) {
-  if (!mimetypes) mimetypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/avif', 'image/jfif', 'application/octet-stream'];
+const getFileUploader = (fieldName, uploadDir, options = {}) => {
+  // Create upload directory if it doesn't exist
+  const fullUploadPath = path.join('public', uploadDir);
+  if (!fs.existsSync(fullUploadPath)) {
+    fs.mkdirSync(fullUploadPath, { recursive: true });
+  }
+
+  // Configure storage
   const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      if (!fs.existsSync(`public/${publicDirName}`)) {
-        fs.mkdirSync(`public/${publicDirName}`, { recursive: true });
-      }
-      cb(null, `public/${publicDirName}`);
+    destination: (req, file, cb) => {
+      cb(null, fullUploadPath);
     },
-    filename: function (req, file, cb) {
-      const { originalname } = file;
-      let fileExt = '.jpeg';
-      const extI = originalname.lastIndexOf('.');
-      if (extI !== -1) {
-        fileExt = originalname.substring(extI).toLowerCase();
-      }
-      const fileName = `${Date.now()}${fileExt}`;
-      cb(null, fileName);
-    },
-  });
-  const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-      mimetypes.includes(file.mimetype) ? cb(null, true) : cb(new ApiError('Invalid image type', 400));
-    },
-    limits: {
-      fileSize: 10 * 1024 * 1024 // 5 MB size limit
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+      cb(null, filename);
     }
-  }).single(fieldName);
-  return upload;
-}
+  });
 
-module.exports = {getFileUploader};
+  // File filter
+  const fileFilter = (req, file, cb) => {
+    if (options.allowedTypes) {
+      if (options.allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new ApiError(400, `Invalid file type. Allowed types: ${options.allowedTypes.join(', ')}`), false);
+      }
+    } else {
+      cb(null, true);
+    }
+  };
+
+  // Configure multer
+  const upload = multer({
+    storage,
+    fileFilter,
+    limits: {
+      fileSize: options.maxSize || 10 * 1024 * 1024 // Default 10MB
+    }
+  });
+
+  return upload.single(fieldName);
+};
+
+const getMultipleFileUploader = (fieldName, uploadDir, maxCount, options = {}) => {
+  // Create upload directory if it doesn't exist
+  const fullUploadPath = path.join('public', uploadDir);
+  if (!fs.existsSync(fullUploadPath)) {
+    fs.mkdirSync(fullUploadPath, { recursive: true });
+  }
+
+  // Configure storage
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, fullUploadPath);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      const filename = `${file.fieldname}-${uniqueSuffix}${ext}`;
+      cb(null, filename);
+    }
+  });
+
+  // File filter
+  const fileFilter = (req, file, cb) => {
+    if (options.allowedTypes) {
+      if (options.allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new ApiError(400, `Invalid file type. Allowed types: ${options.allowedTypes.join(', ')}`), false);
+      }
+    } else {
+      cb(null, true);
+    }
+  };
+
+  // Configure multer
+  const upload = multer({
+    storage,
+    fileFilter,
+    limits: {
+      fileSize: options.maxSize || 10 * 1024 * 1024 // Default 10MB
+    }
+  });
+
+  return upload.array(fieldName, maxCount);
+};
+
+module.exports = {
+  getFileUploader,
+  getMultipleFileUploader
+};

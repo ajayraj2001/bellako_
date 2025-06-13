@@ -20,7 +20,7 @@ const appRoutes = (app) => {
   app.use('/public', express.static('public'));
 
   // API routes
-  app.use('/api/v1', apiRoute);
+  app.use('/api', apiRoute);
 
   // 404 handler
   app.use((req, res, next) => {

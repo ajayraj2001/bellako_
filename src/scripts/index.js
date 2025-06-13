@@ -22,5 +22,4 @@ async function createFirstAdmin() {
     password: hashedPassword,
   });
   await admin.save();
-  console.log('New admin is created');
 }
